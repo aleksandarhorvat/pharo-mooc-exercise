@@ -51,9 +51,3 @@ Counter >> printOn: aStream [
 	aStream nextPutAll: ' withValue: ' , count printString.
 	aStream cr	
 ]
-
-{ #category : #tests }
-Counter >> test [ 
-
-	"this is test"
-]
