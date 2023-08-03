@@ -60,9 +60,8 @@ TBPost >> date: aDate [
 	date := aDate
 ]
 
-{ #category : #accessing }
+{ #category : #initialize }
 TBPost >> initialize [
-
 	super initialize.
 	self category: self class unclassifiedTag.
 	self date: Date today.
