@@ -7,6 +7,16 @@ Class {
 	#category : #Dice
 }
 
+{ #category : #accessing }
+DieHandle >> + aDieHandle [
+
+	| h |
+	h := self class new.
+	self dice do: [ :each | h addDie: each ].
+	aDieHandle  dice do: [ :each | h addDie: each ].
+	^ h
+]
+
 { #category : #initialization }
 DieHandle >> addDie: aDie [
 
