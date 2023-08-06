@@ -30,3 +30,21 @@ DieHandle >> initialize [
 	super initialize.
 	dice := OrderedCollection new.
 ]
+
+{ #category : #accessing }
+DieHandle >> maxValue [ 
+
+	| res |
+	res := 0.
+	res := dice sum: [ :die | die faces ]. "dice do: [ :each | res := res + each faces ]"
+	^ res 
+]
+
+{ #category : #accessing }
+DieHandle >> roll [ 
+
+	| res |
+	res := 0.
+	res := dice sum: [ :die | die roll ]. "dice do: [ :each | res := res + each roll ]"
+	^ res 
+]
