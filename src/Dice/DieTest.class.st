@@ -8,6 +8,14 @@ Class {
 }
 
 { #category : #tests }
+DieTest >> testCreation [
+
+	| die |
+	die := Die withFaces: 20.
+	self assert: die faces equals: 20.
+]
+
+{ #category : #tests }
 DieTest >> testInitialization [ 
 
 	| die |
