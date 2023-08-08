@@ -25,7 +25,7 @@ TBBlog class >> current [
 	ifEmpty: [ self new save ]
 ]
 
-{ #category : #'class intialization' }
+{ #category : #'class initialization' }
 TBBlog class >> initialize [
 	self reset
 ]

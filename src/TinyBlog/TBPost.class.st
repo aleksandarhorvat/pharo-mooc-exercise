@@ -28,7 +28,7 @@ TBPost class >> title: aTitle text: aText category: aCategory [
 	yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #constants }
 TBPost class >> unclassifiedTag [
 
 	^ 'Unclassified'
