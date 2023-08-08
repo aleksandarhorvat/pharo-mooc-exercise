@@ -60,7 +60,7 @@ TBPost >> date: aDate [
 	date := aDate
 ]
 
-{ #category : #initialize }
+{ #category : #initialization }
 TBPost >> initialize [
 	super initialize.
 	self category: self class unclassifiedTag.

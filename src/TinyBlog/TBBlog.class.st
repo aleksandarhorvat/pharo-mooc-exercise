@@ -4,13 +4,10 @@ Class {
 	#instVars : [
 		'posts'
 	],
-	#classInstVars : [
-		'uniqueInstance'
-	],
 	#category : #TinyBlog
 }
 
-{ #category : #initialization }
+{ #category : #'data sample' }
 TBBlog class >> createDemoPosts [
 	"TBBlog createDemoPosts"
 	self current
@@ -21,38 +18,56 @@ TBBlog class >> createDemoPosts [
 	writeBlogPost: ((TBPost title: 'Working with Pharo on the Raspberry Pi' text: 'Hardware is getting cheaper and many new small devices like the famous Raspberry Pi provide new computation power that was one once only available on regular desktop computers.' category: 'Pharo') visible: true)
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 TBBlog class >> current [
-	"answer the instance of the TBRepository"
-	^ uniqueInstance ifNil: [ uniqueInstance := self new ]
+	^ self selectAll
+	ifNotEmpty: [ :x | x anyOne ]
+	ifEmpty: [ self new save ]
 ]
 
-{ #category : #initialization }
+{ #category : #'class intialization' }
+TBBlog class >> initialize [
+	self reset
+]
+
+{ #category : #voyage }
+TBBlog class >> initializeVoyageOnMemoryDB [
+	VOMemoryRepository new enableSingleton
+]
+
+{ #category : #voyage }
+TBBlog class >> isVoyageRoot [
+
+	"Indicates that instances of this class are top level documents in noSQL databases"
+	^ true
+]
+
+{ #category : #accessing }
 TBBlog class >> reset [
-	uniqueInstance := nil
+	self initializeVoyageOnMemoryDB
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #acccessing }
 TBBlog >> allBlogPosts [
 	^ posts
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #acccessing }
 TBBlog >> allBlogPostsFromCategory: aCategory [ 
 	^ posts select: [ :p | p category = aCategory ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #acccessing }
 TBBlog >> allCategories [
 	^ (self allBlogPosts collect: [ :p | p category ]) asSet
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #acccessing }
 TBBlog >> allVisibleBlogPosts [
 	^ posts select: [ :p | p isVisible ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #acccessing }
 TBBlog >> allVisibleBlogPostsFromCategory: aCategory [ 
 	^ posts select: [ :p | p category = aCategory and: [ p isVisible ] ]
 ]
@@ -63,18 +78,20 @@ TBBlog >> initialize [
 	posts := OrderedCollection new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 TBBlog >> removeAllPosts [
-	posts := OrderedCollection new
+	posts := OrderedCollection new.
+	self save
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #acccessing }
 TBBlog >> size [
 	^ posts size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operations }
 TBBlog >> writeBlogPost: aTBPost [ 
 	"Add the blog post to the list of posts."
-	posts add: aTBPost
+	posts add: aTBPost.
+	self save
 ]
