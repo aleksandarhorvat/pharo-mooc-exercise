@@ -39,7 +39,7 @@ Contact >> fullname: aString [
 	fullname := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'accessing-url' }
 Contact >> gravatarUrl [
 	^ 'http://www.gravatar.com/avatar/', (MD5 hashMessage: email trimBoth asLowercase) hex, '.jpg'
 ]
