@@ -21,7 +21,7 @@ TBScreenComponent >> children [
 
 { #category : #initialization }
 TBScreenComponent >> createHeaderComponent [
-	^ TBHeaderComponent new
+	^ TBHeaderComponent from: self
 ]
 
 { #category : #initialization }

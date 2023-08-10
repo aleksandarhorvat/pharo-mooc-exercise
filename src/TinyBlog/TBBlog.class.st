@@ -2,6 +2,7 @@ Class {
 	#name : #TBBlog,
 	#superclass : #Object,
 	#instVars : [
+		'adminUser',
 		'posts'
 	],
 	#category : #TinyBlog
@@ -23,6 +24,16 @@ TBBlog class >> current [
 	^ self selectAll
 	ifNotEmpty: [ :x | x anyOne ]
 	ifEmpty: [ self new save ]
+]
+
+{ #category : #'data values' }
+TBBlog class >> defaultAdminLogin [
+	^ 'admin'
+]
+
+{ #category : #'data values' }
+TBBlog class >> defaultAdminPassword [
+	^ 'topsecret'
 ]
 
 { #category : #'class initialization' }
@@ -47,35 +58,48 @@ TBBlog class >> reset [
 	self initializeVoyageOnMemoryDB
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
+TBBlog >> administrator [
+	^ adminUser
+]
+
+{ #category : #accessing }
 TBBlog >> allBlogPosts [
 	^ posts
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 TBBlog >> allBlogPostsFromCategory: aCategory [ 
 	^ posts select: [ :p | p category = aCategory ]
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 TBBlog >> allCategories [
 	^ (self allBlogPosts collect: [ :p | p category ]) asSet
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 TBBlog >> allVisibleBlogPosts [
 	^ posts select: [ :p | p isVisible ]
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 TBBlog >> allVisibleBlogPostsFromCategory: aCategory [ 
 	^ posts select: [ :p | p category = aCategory and: [ p isVisible ] ]
 ]
 
 { #category : #initialization }
+TBBlog >> createAdministrator [
+	^ TBAdministrator
+		login: self class defaultAdminLogin
+		password: self class defaultAdminPassword
+]
+
+{ #category : #initialization }
 TBBlog >> initialize [
 	super initialize.
-	posts := OrderedCollection new
+	posts := OrderedCollection new.
+	adminUser := self createAdministrator
 ]
 
 { #category : #operations }
@@ -84,7 +108,7 @@ TBBlog >> removeAllPosts [
 	self save
 ]
 
-{ #category : #acccessing }
+{ #category : #accessing }
 TBBlog >> size [
 	^ posts size
 ]

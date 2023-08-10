@@ -3,7 +3,8 @@ Class {
 	#superclass : #TBScreenComponent,
 	#instVars : [
 		'postComponents',
-		'currentCategory'
+		'currentCategory',
+		'showLoginError'
 	],
 	#category : #'TinyBlog-Components'
 }
@@ -40,10 +41,30 @@ TBPostsListComponent >> currentCategory: anObject [
 	currentCategory := anObject
 ]
 
+{ #category : #action }
+TBPostsListComponent >> goToAdministrationView [
+	self call: TBAdminComponent new
+]
+
+{ #category : #accessing }
+TBPostsListComponent >> hasLoginError [
+	^ showLoginError ifNil: [ false ]
+]
+
 { #category : #initialization }
 TBPostsListComponent >> initialize [
 	super initialize.
 	postComponents := OrderedCollection new
+]
+
+{ #category : #accessing }
+TBPostsListComponent >> loginErrorMessage [
+	^ 'Incorrect login and/or password'
+]
+
+{ #category : #accessing }
+TBPostsListComponent >> loginErrorOccurred [
+	showLoginError := true
 ]
 
 { #category : #'component creation' }
@@ -86,10 +107,33 @@ TBPostsListComponent >> renderContentOn: html [
 ]
 
 { #category : #rendering }
+TBPostsListComponent >> renderLoginErrorMessageIfAnyOn: html [
+	self hasLoginError ifTrue: [
+		showLoginError := false.
+		html tbsAlert
+			beDanger ;
+			with: self loginErrorMessage
+	]
+]
+
+{ #category : #rendering }
 TBPostsListComponent >> renderPostColumnOn: html [
 	html tbsColumn
 		extraSmallSize: 12;
 		smallSize: 10;
 		mediumSize: 8;
-	with: [ self basicRenderPostsOn: html ]
+		with: [
+			self renderLoginErrorMessageIfAnyOn: html.
+			self basicRenderPostsOn: html ]
+]
+
+{ #category : #callbacks }
+TBPostsListComponent >> tryConnectionWithLogin: login andPassword: password [
+	(login = self blog administrator login and: [
+		(SHA256 hashMessage: password) = self blog administrator
+		password ])
+			ifTrue: [
+				self session currentAdmin: self blog administrator.
+				self goToAdministrationView ]
+			ifFalse: [ self loginErrorOccurred ]
 ]
