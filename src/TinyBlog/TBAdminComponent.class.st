@@ -3,10 +3,16 @@ Class {
 	#superclass : #TBScreenComponent,
 	#instVars : [
 		'postComponents',
-		'currentCategory'
+		'currentCategory',
+		'report'
 	],
 	#category : #'TinyBlog-Components'
 }
+
+{ #category : #hooks }
+TBAdminComponent >> children [
+	^ super children copyWith: self report
+]
 
 { #category : #rendering }
 TBAdminComponent >> createHeaderComponent [
@@ -18,10 +24,27 @@ TBAdminComponent >> goToPostListView [
 	self answer
 ]
 
+{ #category : #initialization }
+TBAdminComponent >> initialize [
+	super initialize.
+	self report: (TBPostsReport from: self blog)
+]
+
 { #category : #rendering }
 TBAdminComponent >> renderContentOn: html [
 	super renderContentOn: html.
 	html tbsContainer: [
 		html heading: 'Blog Admin'.
-		html horizontalRule ]
+		html horizontalRule.
+		html render: self report ]
+]
+
+{ #category : #accessing }
+TBAdminComponent >> report [
+	^ report
+]
+
+{ #category : #accessing }
+TBAdminComponent >> report: anObject [
+	report := anObject
 ]
